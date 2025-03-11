@@ -123,4 +123,40 @@ const game = (function() {
   return { play };
 })();
 
+/*
 game.play();
+*/
+const display = (function() {
+  const gameboardElement = document.querySelector(".gameboard");
+
+  const initialize = () => {
+    createBoard();
+    listenCellClicks();
+  }
+
+  const createBoard = () => {
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell", "empty");
+        cell.setAttribute("data-row", `${i}`);
+        cell.setAttribute("data-column", `${j}`);
+      
+        gameboardElement.appendChild(cell);
+      }
+    }
+  }
+
+  const listenCellClicks = () => {
+    gameboardElement.addEventListener("click", (event) => {
+      if (event.target.classList.contains("empty")) {
+        // TODO
+        console.log(`Clicked cell ${event.target.dataset.row}-${event.target.dataset.column}`);
+      }
+    })
+  }
+
+  return { initialize };
+})();
+
+display.initialize();

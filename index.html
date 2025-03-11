@@ -15,46 +15,50 @@
   <div class="content">
     <div class="player-info" id="player-one">
       <h2>Player 1</h2>
-      
-      <div class="input-container">
-        <label for="player-name-one">Name</label>
-        <input type="text" name="player-name-one" id="player-name-one">
-      </div>
-      
-      <div class="input-container">
-        <span>Marker Color</span>
-        <div class="color-options" id="marker-color-one">
-          <div class="option">
-            <input type="radio" name="marker-color-one" id="marker-color-one-1">
-            <label for="marker-color-one-1">1</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-one" id="marker-color-one-2">
-            <label for="marker-color-one-2">2</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-one" id="marker-color-one-3">
-            <label for="marker-color-one-3">3</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-one" id="marker-color-one-4">
-            <label for="marker-color-one-4">4</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-one" id="marker-color-one-5">
-            <label for="marker-color-one-5">5</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-one" id="marker-color-one-6">
-            <label for="marker-color-one-6">6</label>
+
+      <form class="player-form" id="form-one">
+        <div class="input-container">
+          <label for="player-name-one">Name</label>
+          <input type="text" name="player-name" id="player-name-one">
+        </div>
+        
+        <div class="input-container">
+          <span>Marker Color</span>
+          <div class="color-options" id="marker-color-one">
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-one-red">
+              <label for="marker-color-one-red">Red</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-one-orange">
+              <label for="marker-color-one-orange">Orange</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-one-yellow">
+              <label for="marker-color-one-yellow">Yellow</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-one-green">
+              <label for="marker-color-one-green">Green</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-one-blue">
+              <label for="marker-color-one-blue">Blue</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-one-purple">
+              <label for="marker-color-one-purple">Purple</label>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="input-container">
-        <label for="marker-type-one">Marker Type</label>
-        <select name="marker-type-one" id="marker-type-one"></select>
-      </div>
+        
+        <div class="input-container">
+          <label for="marker-type-one">Marker Type</label>
+          <select name="marker-type" id="marker-type-one"></select>
+        </div>
+
+        <button type="submit">Ready</button>
+      </form>
     </div>
 
     <div class="gameboard">
@@ -63,45 +67,49 @@
     <div class="player-info" id="player-two">
       <h2>Player 2</h2>
       
-      <div class="input-container">
-        <label for="player-name-two">Name</label>
-        <input type="text" name="player-name-two" id="player-name-two">
-      </div>
-      
-      <div class="input-container">
-        <span>Marker Color</span>
-        <div class="color-options" id="marker-color-two">
-          <div class="option">
-            <input type="radio" name="marker-color-two" id="marker-color-two-1">
-            <label for="marker-color-two-1">1</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-two" id="marker-color-two-2">
-            <label for="marker-color-two-2">2</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-two" id="marker-color-two-3">
-            <label for="marker-color-two-3">3</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-two" id="marker-color-two-4">
-            <label for="marker-color-two-4">4</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-two" id="marker-color-two-5">
-            <label for="marker-color-two-5">5</label>
-          </div>
-          <div class="option">
-            <input type="radio" name="marker-color-two" id="marker-color-two-6">
-            <label for="marker-color-two-6">6</label>
+      <form class="player-form" id="form-two">
+        <div class="input-container">
+          <label for="player-name-two">Name</label>
+          <input type="text" name="player-name" id="player-name-two">
+        </div>
+        
+        <div class="input-container">
+          <span>Marker Color</span>
+          <div class="color-options" id="marker-color-two">
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-two-red">
+              <label for="marker-color-two-red">Red</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-two-orange">
+              <label for="marker-color-two-orange">Orange</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-two-yellow">
+              <label for="marker-color-two-yellow">Yellow</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-two-green">
+              <label for="marker-color-two-green">Green</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-two-blue">
+              <label for="marker-color-two-blue">Blue</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-color" id="marker-color-two-purple">
+              <label for="marker-color-two-purple">Purple</label>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="input-container">
-        <label for="marker-type-two">Marker Type</label>
-        <select name="marker-type-two" id="marker-type-two"></select>
-      </div>
+  
+        <div class="input-container">
+          <label for="marker-type-two">Marker Type</label>
+          <select name="marker-type" id="marker-type-two"></select>
+        </div>
+      
+        <button type="submit">Ready</button>
+      </form>
     </div>
   </div>
   

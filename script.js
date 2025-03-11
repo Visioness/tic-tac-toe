@@ -123,17 +123,17 @@ const game = (function() {
   return { play };
 })();
 
-/*
-game.play();
-*/
 const display = (function() {
   const gameboardElement = document.querySelector(".gameboard");
-
+  const playerOneForm = document.querySelector("#form-one");
+  const playerTwoForm = document.querySelector("#form-two");
+  
   const initialize = () => {
     createBoard();
     listenCellClicks();
+    listenForms();
   }
-
+  
   const createBoard = () => {
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
@@ -141,12 +141,12 @@ const display = (function() {
         cell.classList.add("cell", "empty");
         cell.setAttribute("data-row", `${i}`);
         cell.setAttribute("data-column", `${j}`);
-      
+        
         gameboardElement.appendChild(cell);
       }
     }
   }
-
+  
   const listenCellClicks = () => {
     gameboardElement.addEventListener("click", (event) => {
       if (event.target.classList.contains("empty")) {
@@ -156,7 +156,34 @@ const display = (function() {
     })
   }
 
+  const listenForms = () => {
+    [playerOneForm, playerTwoForm].forEach(form => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        form.parentElement.classList.toggle("ready");
+        checkReady();
+      });
+    });
+  }
+
+  const checkReady = () => {
+    if ([playerOneForm, playerTwoForm].every(form => form.parentElement.classList.contains("ready"))) {
+      [playerOneForm, playerTwoForm].forEach(form => {
+        form.parentElement.classList.add("removed");
+        form.parentElement.classList.remove("ready");
+      });
+    } else {
+      [playerOneForm, playerTwoForm].forEach(form => {
+        form.parentElement.classList.remove("removed");
+      });
+    }
+  }
+  
   return { initialize };
 })();
 
 display.initialize();
+/*
+game.play();
+*/
+

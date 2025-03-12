@@ -13,6 +13,14 @@
   </div>
 
   <div class="content">
+    <div class="scoreboard">
+      <span class="player-name" id="scoreboard-name-one">Player 1</span>
+      <span class="player-score" id="player-score-one">0</span>
+      <span class="versus">VS</span>
+      <span class="player-score" id="player-score-two">0</span>
+      <span class="player-name" id="scoreboard-name-two">Player 2</span>
+    </div>
+
     <div class="player-info" id="player-one">
       <h2>Player 1</h2>
 
@@ -53,14 +61,20 @@
         </div>
         
         <div class="input-container">
-          <label for="marker-type-one">Marker Type</label>
-          <select name="marker-type" id="marker-type-one">
-            <option value="x" selected>X</option>
-            <option value="o">O</option>
-          </select>
+          <span>Marker Type</span>
+          <div class="marker-options" id="marker-type-one">
+            <div class="option">
+              <input type="radio" name="marker-type" id="marker-type-one-x" value="x" checked>
+              <label for="marker-type-one-x">X</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-type" id="marker-type-one-o" value="o">
+              <label for="marker-type-one-o">O</label>
+            </div>
+          </div>
         </div>
 
-        <button type="submit">Ready</button>
+        <button type="submit" class="ready-button">Ready</button>
       </form>
     </div>
 
@@ -107,15 +121,25 @@
         </div>
   
         <div class="input-container">
-          <label for="marker-type-two">Marker Type</label>
-          <select name="marker-type" id="marker-type-two">
-            <option value="x">X</option>
-            <option value="o" selected>O</option>
-          </select>
+          <span>Marker Type</span>
+          <div class="marker-options" id="marker-type-two">
+            <div class="option">
+              <input type="radio" name="marker-type" id="marker-type-two-x" value="x">
+              <label for="marker-type-two-x">X</label>
+            </div>
+            <div class="option">
+              <input type="radio" name="marker-type" id="marker-type-two-o" value="o" checked>
+              <label for="marker-type-two-o">O</label>
+            </div>
+          </div>
         </div>
       
-        <button type="submit">Ready</button>
+        <button type="submit" class="ready-button">Ready</button>
       </form>
+    </div>
+
+    <div class="instructions">
+      <span><span class="turn">Player 1</span>'s turn.</span>
     </div>
   </div>
   

@@ -11,24 +11,54 @@ button {
 
 body {
   height: 100vh;
-  background-color: lightcoral;
   display: grid;
   grid-template-rows: minmax(60px, 6%) 1fr minmax(30px, 4%);
   overflow-x: hidden;
 }
 
+:root {
+  --black: black;
+  --dark: rgb(10, 10, 32);
+  --dark-green: darkgreen;
+  --gray: #444;
+  --light: rgb(220, 220, 220);
+  --light-gray: lightgray;
+  --light-blue: rgb(150, 179, 218);
+  --light-green: rgb(125, 228, 125);
+
+  --marker-color-red: rgb(223, 24, 64);
+  --marker-color-orange: rgb(202, 123, 19);
+  --marker-color-yellow: rgb(207, 204, 22);
+  --marker-color-green: rgb(27, 204, 80);
+  --marker-color-blue: rgb(27, 119, 211);
+  --marker-color-purple: rgb(136, 26, 209);
+
+  --player-card-primary: rgb(222, 222, 230);
+  --player-card-secondary: rgb(34, 48, 65);
+  --gradient-red: rgb(107, 33, 49);
+  --gradient-dark: var(--dark);
+}
+
 .header,
 .footer {
-  background-color: antiquewhite;
+  background-color: var(--dark);
+  color: var(--light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
 }
 
 .content {
-  padding: 40px 80px;
+  padding: 20px;
   display: grid;
   grid-template-columns: 1fr minmax(180px, 300px) minmax(180px, 300px) 1fr;
   grid-template-rows: 1fr minmax(360px, 600px) 1fr;
+  row-gap: 20px;
   align-content: center;
   perspective: 1000px;
+  background: var(--gradient-red);
+  background: radial-gradient(circle, var(--gradient-dark) 0%, var(--gradient-red) 20%, var(--gradient-dark) 90%);
 }
 
 .player-info {
@@ -37,8 +67,11 @@ body {
   aspect-ratio: 1 / 2;
   text-align: center;
   padding: 40px 20px;
-  border: 4px solid black;
-  background-color: lightgray;
+  border: 4px solid var(--light-blue);
+  color: var(--light);
+  background: var(--player-card-secondary);
+  box-shadow: inset 0 0 20px 4px var(--dark);
+  transition: all 2s;
   
   align-self: center;
   display: grid;
@@ -52,6 +85,7 @@ body {
   grid-row: 2;
   transform-origin: left;
   border-right-width: 2px;
+  border-radius: 40px 0 0 40px;
 }
 
 #player-two {
@@ -59,6 +93,7 @@ body {
   grid-row: 2;
   transform-origin: right;
   border-left-width: 2px;
+  border-radius: 0 40px 40px 0;
 }
 
 .player-form {
@@ -73,8 +108,34 @@ body {
 }
 
 .player-info.ready {
-  /* READY STYLING FOR PLAYERS */
-  background-color: darkgreen;
+  transition: all 2s;
+  position: relative;
+}
+
+#player-one::after,
+#player-two::after {
+  position: absolute;
+  content: "";
+  width: 0%;
+  height: 4%;
+  top: 80px;
+  transition: width 0.5s ease-in-out;
+  backface-visibility: hidden;
+}
+
+#player-one::after {
+  left: 0;
+  background: linear-gradient(90deg, var(--light-blue) 10%, var(--light-green) 50%, var(--light-blue) 90%);
+}
+
+#player-two::after {
+  right: 0;
+  background: linear-gradient(-90deg, var(--light-gray) 10%, var(--light-green) 50%, var(--light-blue) 90%);
+}
+
+#player-one.ready::after,
+#player-two.ready::after {
+  width: 100%;
 }
 
 #player-one.removed {
@@ -88,7 +149,32 @@ body {
 .input-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
+}
+
+.input-container > input[type="text"],
+.ready-button {
+  width: 50%;
+  align-self: center;
+}
+
+.player-form input[type="text"] {
+  height: 32px;
+  padding: 4px 8px;
+  text-align: center;
+  background-color: var(--player-card-secondary);
+  color: var(--light);
+  border: none;
+  border-bottom: 2px solid var(--light-blue);
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.player-form input[type="text"]:focus-visible {
+  outline: none;
 }
 
 .input-container > label,
@@ -101,7 +187,13 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
-  gap: 12px;
+  gap: 12px 24px;
+}
+
+.marker-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
 .option {
@@ -110,8 +202,38 @@ body {
   gap: 4px;
 }
 
-.option > label {
-  color: #444;
+.scoreboard,
+.instructions {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 1.8em;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  background-color: var(--player-card-secondary);
+  color: var(--light);
+  border: 4px solid var(--light-blue);
+  box-shadow: inset 0 0 20px 0 var(--dark);
+  border-radius: 20px;
+}
+
+.scoreboard > .player-score {
+  font-size: 1.5em;
+}
+
+.scoreboard > .versus {
+  font-size: 1.5em;
+}
+
+.scoreboard {
+  grid-column: 2 / 4;
+  grid-row: 1;
+}
+
+.instructions {
+  grid-column: 2 / 4;
+  grid-row: 3;
 }
 
 .gameboard {
@@ -121,20 +243,56 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  background-color: lightgoldenrodyellow;
   justify-content: center;
   align-content: center;
   align-self: center;
   aspect-ratio: 1 / 1;
+  background-color: var(--player-card-secondary);
+  border: 4px solid var(--light-blue);
+  border-radius: 40px;
+  box-shadow: inset 0 0 20px 0 var(--dark);
 }
 
 .cell {
   position: relative;
-  background: lightblue;
-  border: 1px solid #000;
+  background: var(--light-blue);
+  border: 2px solid var(--light);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: inset 0 0 20px 0 var(--dark);
+}
+
+.cell[data-row="0"][data-column="0"] {
+  border-radius: 20px 0 0 0;
+}
+
+.cell[data-row="0"][data-column="2"] {
+  border-radius: 0 20px 0 0;
+}
+
+.cell[data-row="2"][data-column="0"] {
+  border-radius: 0 0 0 20px;
+}
+
+.cell[data-row="2"][data-column="2"] {
+  border-radius: 0 0 20px 0;
+}
+
+.cell[data-row="0"] {
+  border-top-width: 4px;
+}
+
+.cell[data-row="2"] {
+  border-bottom-width: 4px;
+}
+
+.cell[data-column="0"] {
+  border-left-width: 4px;
+}
+
+.cell[data-column="2"] {
+  border-right-width: 4px;
 }
 
 .x > svg,
@@ -144,23 +302,37 @@ body {
 }
 
 .line {
-  stroke-width: 7;
+  stroke-width: 9;
   stroke-dasharray: 140;
   stroke-dashoffset: 140;
-  animation: draw 1s ease forwards;
+  animation: draw 0.5s ease forwards;
 }
 
 .circle {
-  stroke-width: 7;
+  stroke-width: 9;
   fill: none;
   stroke-dasharray: 314;
   stroke-dashoffset: 314;
-  animation: draw 2s ease forwards;
+  animation: draw 1s ease forwards;
 }
 
 @keyframes draw {
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ready-left {
+  0% {
+    background: linear-gradient(90deg, var(--light-gray) 0%, var(--light-gray) 100%);
+  }
+  
+  50% {
+    background: linear-gradient(90deg, var(--light-gray) 0%, var(--light-green) 60%);
+  }
+  
+  100% {
+    background: linear-gradient(90deg, var(--light-gray) 0%, var(--light-green) 0%);
   }
 }
 

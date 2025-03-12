@@ -172,7 +172,7 @@ const display = (function() {
           form.parentElement.classList.add("removed");
           form.parentElement.classList.remove("ready");
           listenCellClicks();
-        }, 2000);
+        }, 1000);
       });
 
       game.start(
@@ -215,7 +215,7 @@ const display = (function() {
     svg.appendChild(line1);
     setTimeout(() => {
       svg.appendChild(line2);
-    }, 1000)
+    }, 500)
 
     return svg;
   }

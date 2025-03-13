@@ -33,8 +33,15 @@ body {
   --marker-color-blue: rgb(27, 119, 211);
   --marker-color-purple: rgb(136, 26, 209);
 
-  --player-card-primary: rgb(222, 222, 230);
-  --player-card-secondary: rgb(34, 48, 65);
+  --background-red: rgba(223, 24, 64, 0.3);
+  --background-orange: rgba(202, 123, 19, 0.3);
+  --background-yellow: rgba(207, 204, 22, 0.3);
+  --background-green: rgba(27, 204, 80, 0.3);
+  --background-blue: rgba(27, 119, 211, 0.3);
+  --background-purple: rgba(136, 26, 209, 0.3);
+
+
+  --player-card-primary: rgb(34, 48, 65);
   --gradient-red: rgb(107, 33, 49);
   --gradient-dark: var(--dark);
 }
@@ -52,8 +59,8 @@ body {
 .content {
   padding: 20px;
   display: grid;
-  grid-template-columns: 1fr minmax(180px, 300px) minmax(180px, 300px) 1fr;
-  grid-template-rows: 1fr minmax(360px, 600px) 1fr;
+  grid-template-columns: 1fr minmax(250px, 300px) minmax(250px, 300px) 1fr;
+  grid-template-rows: minmax(36px, minmax(30%, 200px)) minmax(500px, minmax(min-content, calc(60% - 40px))) minmax(36px, minmax(20%, 61px));
   row-gap: 20px;
   align-content: center;
   perspective: 1000px;
@@ -69,7 +76,7 @@ body {
   padding: 20px;
   border: 4px solid var(--light-blue);
   color: var(--light);
-  background: var(--player-card-secondary);
+  background: var(--player-card-primary);
   box-shadow: inset 0 0 20px 4px var(--dark);
   transition: all 2s;
   
@@ -96,38 +103,12 @@ body {
   border-radius: 0 40px 40px 0;
 }
 
-#player-one::after,
-#player-two::after {
-  position: absolute;
-  content: "";
-  width: 0%;
-  height: 4%;
-  top: 68px;
-  transition: width 0.5s ease-in-out;
-  backface-visibility: hidden;
-}
-
-#player-one::after {
-  left: 0;
-  background: linear-gradient(90deg, var(--light-blue) 10%, var(--light-green) 50%, var(--light-blue) 90%);
-}
-
-#player-two::after {
-  right: 0;
-  background: linear-gradient(-90deg, var(--light-gray) 10%, var(--light-green) 50%, var(--light-blue) 90%);
-}
-
-#player-one.ready::after,
-#player-two.ready::after {
-  width: 100%;
-}
-
 #player-one.removed {
-  animation: close-left 2s linear forwards;
+  animation: close-left 1s linear forwards;
 }
 
 #player-two.removed {
-  animation: close-right 2s linear forwards;
+  animation: close-right 1s linear forwards;
 }
 
 .player-form {
@@ -141,12 +122,23 @@ body {
 .player-info h2 {
   backface-visibility: hidden;
   position: relative;
+  transition: color 0.3s ease-in-out;
+}
+
+#player-one h2 {
+  color: var(--marker-color-red);
+  --box-shadow: 0 0 16px 4px var(--marker-color-red);
+}
+
+#player-two h2{
+  color: var(--marker-color-blue);
+  --box-shadow: 0 0 16px 4px var(--marker-color-blue);
 }
 
 .player-info h2::after {
   position: absolute;
   content: "";
-  width: 70%;
+  width: 50%;
   bottom: -20px;
   left: 50%;
   transform: translateX(-50%);
@@ -154,6 +146,11 @@ body {
   border-bottom-style: solid;
   border-color: inherit;
   box-shadow: var(--box-shadow, none);
+  transition: all 0.3s ease-in-out;
+}
+
+.player-info.ready h2::after {
+  width: calc(100% + 40px);
 }
 
 .player-info.ready {
@@ -232,6 +229,31 @@ body {
   gap: 4px;
 }
 
+.ready-button {
+  height: 32px;
+  border-radius: 12px;
+  border: 3px solid var(--marker-color-blue);
+  background-color: var(--black);
+  color: var(--light);
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.ready-button:hover {
+  background-color: var(--light);
+  color: var(--black);
+}
+
+#player-one .ready-button {
+  border-color: var(--marker-color-red);
+  box-shadow: 0 0 12px 3px var(--marker-color-red);
+}
+
+#player-two .ready-button {
+  border-color: var(--marker-color-blue);
+  box-shadow: 0 0 12px 3px var(--marker-color-blue);
+}
+
 .scoreboard,
 .instructions {
   display: flex;
@@ -239,21 +261,36 @@ body {
   align-items: center;
   font-size: 1.8em;
   text-align: center;
-  padding: 10px;
   font-weight: bold;
-  background-color: var(--player-card-secondary);
   color: var(--light);
-  border: 4px solid var(--light-blue);
   box-shadow: inset 0 0 20px 0 var(--dark);
+  border: 4px solid var(--light-blue);
+  background-color: var(--player-card-primary);
   border-radius: 20px;
+  
+  transition: all 0.5s ease-in-out;
+  height: 0%;
+  padding: 0px;
+  border-width: 0;
+  opacity: 0;
 }
 
-.scoreboard > .player-score {
-  font-size: 1.5em;
+.instructions {
+  align-self: end;
 }
 
-.scoreboard > .versus {
-  font-size: 1.5em;
+.scoreboard.visible,
+.instructions.visible {
+  transition: all 0.5s ease-in-out;
+  height: 100%;
+  padding: 10px;
+  border-width: 4px;
+  opacity: 1;
+}
+
+.scoreboard > *,
+.instructions > * {
+  height: max-content;
 }
 
 .scoreboard {
@@ -277,7 +314,7 @@ body {
   align-content: center;
   align-self: center;
   aspect-ratio: 1 / 1;
-  background-color: var(--player-card-secondary);
+  background-color: var(--player-card-primary);
   border: 4px solid var(--light-blue);
   border-radius: 40px;
   box-shadow: inset 0 0 20px 0 var(--dark);

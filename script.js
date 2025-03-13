@@ -115,14 +115,16 @@ const display = (function() {
   const gameboardElement = document.querySelector(".gameboard");
   const playerOneForm = document.querySelector("#form-one");
   const playerTwoForm = document.querySelector("#form-two");
+  const scoreBoard = document.querySelector(".scoreboard");
+  const instructions = document.querySelector(".instructions");
   
   const initialize = () => {
-    createBoard();
+    createGameBoard();
     listenSubmit();
     listenColorChange();
   }
   
-  const createBoard = () => {
+  const createGameBoard = () => {
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         const cell = document.createElement("div");
@@ -149,11 +151,40 @@ const display = (function() {
         event.target.appendChild(svg);
         event.target.classList.add(game.turn().getMarker());
         event.target.classList.remove("empty");
-        
+
         game.playRound(event.target.dataset.row, event.target.dataset.column);
+        
+        instructions.querySelector(".turn").textContent = game.turn().getName();
+        instructions.querySelector(".turn").style.color = `var(--marker-color-${game.turn().getColor()})`;
         console.log(`Clicked cell ${event.target.dataset.row}-${event.target.dataset.column}`);
       }
     })
+  }
+
+  const listenColorChange = () => {
+    const h2One = document.querySelector("#player-one h2");
+    const h2Two = document.querySelector("#player-two h2");
+
+    const colorOptionsOne = document.querySelector("#player-one .color-options");
+    const colorOptionsTwo = document.querySelector("#player-two .color-options");
+
+    [[colorOptionsOne, h2One], [colorOptionsTwo, h2Two]].forEach(([colorGroup, h2]) => {
+      colorGroup.addEventListener("click", (event) => {
+        const option = event.target.closest(".option");
+        const readyButton = event.target.closest(".player-form").querySelector(".ready-button");
+
+        if (option) {
+          const radioButton = option.querySelector("input");
+          h2.style.color = `var(--marker-color-${radioButton.value})`;
+          h2.style.borderColor = `var(--marker-color-${radioButton.value})`;
+          h2.style.setProperty("--box-shadow", `0 0 16px 4px var(--marker-color-${radioButton.value})`);
+
+          
+          readyButton.style.borderColor = `var(--marker-color-${radioButton.value})`; 
+          readyButton.style.setProperty("box-shadow", `0 0 12px 3px var(--marker-color-${radioButton.value})`); 
+        }
+      });
+    });
   }
 
   const listenSubmit = () => {
@@ -172,9 +203,12 @@ const display = (function() {
         setTimeout(() => {
           form.parentElement.classList.add("removed");
           form.parentElement.classList.remove("ready");
-          listenCellClicks();
         }, 1000);
       });
+
+      listenCellClicks();
+      createScoreBoard();
+      createInstructions();
 
       game.start(
         createPlayer(
@@ -238,27 +272,39 @@ const display = (function() {
 
     return svg;
   }
-
-  const listenColorChange = () => {
-    const h2One = document.querySelector("#player-one h2");
-    const h2Two = document.querySelector("#player-two h2");
-
-    const colorOptionsOne = document.querySelector("#player-one .color-options");
-    const colorOptionsTwo = document.querySelector("#player-two .color-options");
-
-    [[colorOptionsOne, h2One], [colorOptionsTwo, h2Two]].forEach(([colorGroup, h2]) => {
-      colorGroup.addEventListener("click", (event) => {
-        const option = event.target.closest(".option");
-        if (option) {
-          const radioButton = option.querySelector("input");
-          h2.style.color = `var(--marker-color-${radioButton.value})`;
-          h2.style.borderColor = `var(--marker-color-${radioButton.value})`;
-          h2.style.setProperty("--box-shadow", `0 0 16px 4px var(--marker-color-${radioButton.value})`);
-        }
-      });
-    });
-  }
   
+  const createScoreBoard = () => {
+    scoreBoard.classList.add("visible");
+    setTimeout(() => {
+      const playerOneName = scoreBoard.querySelector("#scoreboard-name-one");
+      const playerTwoName = scoreBoard.querySelector("#scoreboard-name-two");
+      playerOneName.textContent = playerOneForm.elements["player-name"].value;
+      playerTwoName.textContent = playerTwoForm.elements["player-name"].value;
+      playerOneName.style.color = `var(--marker-color-${playerOneForm.elements["marker-color"].value})`;
+      playerTwoName.style.color = `var(--marker-color-${playerTwoForm.elements["marker-color"].value})`;
+  
+      const playerOneScore = scoreBoard.querySelector("#player-score-one");
+      const playerTwoScore = scoreBoard.querySelector("#player-score-two");
+      playerOneScore.textContent = "0";
+      playerTwoScore.textContent = "0";
+      playerOneScore.style.color = `var(--marker-color-${playerOneForm.elements["marker-color"].value})`;
+      playerTwoScore.style.color = `var(--marker-color-${playerTwoForm.elements["marker-color"].value})`;
+  
+      scoreBoard.querySelector(".versus").textContent = "VS";
+    }, 500);
+  }
+
+  const createInstructions = () => {
+    instructions.classList.add("visible");
+    const message = document.createTextNode("'s turn.");
+
+    setTimeout(() => {
+      instructions.querySelector(".turn").textContent = game.turn().getName();
+      instructions.querySelector(".turn").style.color = `var(--marker-color-${game.turn().getColor()})`;
+      instructions.querySelector(".message").append(message);
+    }, 500);
+  }
+
   return { initialize, drawX, drawO };
 })();
 

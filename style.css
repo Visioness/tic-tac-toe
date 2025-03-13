@@ -66,7 +66,7 @@ body {
   z-index: 1;
   aspect-ratio: 1 / 2;
   text-align: center;
-  padding: 40px 20px;
+  padding: 20px;
   border: 4px solid var(--light-blue);
   color: var(--light);
   background: var(--player-card-secondary);
@@ -96,29 +96,13 @@ body {
   border-radius: 0 40px 40px 0;
 }
 
-.player-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  backface-visibility: hidden;
-}
-
-.player-info h2 {
-  backface-visibility: hidden;
-}
-
-.player-info.ready {
-  transition: all 2s;
-  position: relative;
-}
-
 #player-one::after,
 #player-two::after {
   position: absolute;
   content: "";
   width: 0%;
   height: 4%;
-  top: 80px;
+  top: 68px;
   transition: width 0.5s ease-in-out;
   backface-visibility: hidden;
 }
@@ -146,12 +130,43 @@ body {
   animation: close-right 2s linear forwards;
 }
 
+.player-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 40px;
+  backface-visibility: hidden;
+}
+
+.player-info h2 {
+  backface-visibility: hidden;
+  position: relative;
+}
+
+.player-info h2::after {
+  position: absolute;
+  content: "";
+  width: 70%;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-width: 4px;
+  border-bottom-style: solid;
+  border-color: inherit;
+  box-shadow: var(--box-shadow, none);
+}
+
+.player-info.ready {
+  transition: all 2s;
+  position: relative;
+}
+
 .input-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 
 .input-container > input[type="text"],
@@ -164,10 +179,11 @@ body {
   height: 32px;
   padding: 4px 8px;
   text-align: center;
-  background-color: var(--player-card-secondary);
-  color: var(--light);
+  background-color: var(--light-gray);
+  color: var(--dark);
   border: none;
-  border-bottom: 2px solid var(--light-blue);
+  border: 2px solid var(--light);
+  box-shadow: inset 0 0 10px ;
   border-radius: 8px;
   font-weight: bold;
   font-size: 1.1em;
@@ -181,6 +197,20 @@ body {
 .input-container > span {
   font-size: 1.1em;
   font-weight: bold;
+}
+
+.input-container {
+  position: relative;
+}
+
+.input-container:not(:last-of-type)::after {
+  position: absolute;
+  content: "";
+  width: 200px;
+  bottom: -30px;
+  border-bottom: 1px solid var(--light-blue);
+  border-top: 1px solid var(--light-blue);
+  box-shadow: 0 0 10px 2px var(--light-blue);
 }
 
 .color-options {

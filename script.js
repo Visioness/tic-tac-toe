@@ -118,7 +118,8 @@ const display = (function() {
   
   const initialize = () => {
     createBoard();
-    listenForms();
+    listenSubmit();
+    listenColorChange();
   }
   
   const createBoard = () => {
@@ -155,7 +156,7 @@ const display = (function() {
     })
   }
 
-  const listenForms = () => {
+  const listenSubmit = () => {
     [playerOneForm, playerTwoForm].forEach(form => {
       form.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -236,6 +237,26 @@ const display = (function() {
     svg.appendChild(circle);
 
     return svg;
+  }
+
+  const listenColorChange = () => {
+    const h2One = document.querySelector("#player-one h2");
+    const h2Two = document.querySelector("#player-two h2");
+
+    const colorOptionsOne = document.querySelector("#player-one .color-options");
+    const colorOptionsTwo = document.querySelector("#player-two .color-options");
+
+    [[colorOptionsOne, h2One], [colorOptionsTwo, h2Two]].forEach(([colorGroup, h2]) => {
+      colorGroup.addEventListener("click", (event) => {
+        const option = event.target.closest(".option");
+        if (option) {
+          const radioButton = option.querySelector("input");
+          h2.style.color = `var(--marker-color-${radioButton.value})`;
+          h2.style.borderColor = `var(--marker-color-${radioButton.value})`;
+          h2.style.setProperty("--box-shadow", `0 0 16px 4px var(--marker-color-${radioButton.value})`);
+        }
+      });
+    });
   }
   
   return { initialize, drawX, drawO };

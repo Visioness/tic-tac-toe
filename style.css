@@ -333,6 +333,17 @@ body {
   box-shadow: 0 0 12px 3px var(--marker-color-blue);
 }
 
+.scoreboard {
+  grid-column: 2 / 4;
+  grid-row: 1;
+}
+
+.instructions {
+  grid-column: 2 / 4;
+  grid-row: 3;
+  align-self: end;
+}
+
 .scoreboard,
 .instructions {
   display: flex;
@@ -354,10 +365,6 @@ body {
   opacity: 0;
 }
 
-.instructions {
-  align-self: end;
-}
-
 .scoreboard.visible,
 .instructions.visible {
   transition: all 0.5s ease-in-out;
@@ -370,16 +377,6 @@ body {
 .scoreboard > *,
 .instructions > * {
   height: max-content;
-}
-
-.scoreboard {
-  grid-column: 2 / 4;
-  grid-row: 1;
-}
-
-.instructions {
-  grid-column: 2 / 4;
-  grid-row: 3;
 }
 
 .gameboard {

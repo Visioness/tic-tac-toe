@@ -2,8 +2,13 @@ function createPlayer(name, marker, color) {
   const getName = () => name;
   const getMarker = () => marker;
   const getColor = () => color;
+  
+  let score = 0;
+  const getScore = () => score;
+  const incrementScore = () => score++;
+  const resetScore = () => score = 0;
  
-  return { getName, getMarker, getColor };
+  return { getName, getMarker, getColor, getScore, incrementScore };
 }
 
 
@@ -24,15 +29,14 @@ const gameboard = (function() {
 
   const clear = () => board.length = 0;
 
-  const draw = () => {
-    for (let i = 0; i < 3; i++) {
-      console.log(board[i]);
-    }
+  const reset = () => {
+    clear();
+    create();
   }
   
   const mark = (marker, row, column) => board[row][column] = marker; 
 
-  return { create, currentState, clear, mark, draw };
+  return { create, reset, currentState, mark };
 })();
 
 
@@ -50,6 +54,7 @@ const game = (function() {
 
   const players = [];
   let round;
+  let orderChanged;
   
   const start = (playerOne, playerTwo) => {
     // TEMP
@@ -57,17 +62,25 @@ const game = (function() {
     players.push(playerTwo);
 
     round = 0;
-    
+    orderChanged = false;
     gameboard.create();
-    console.log(playerOne.get);
-    console.log(`The game has been started between ${playerOne.getName()} and ${playerTwo.getName()}`);
   }
 
   const playRound = (row, column) => {
     makeMove(row, column);
     if (over()) {
-      // TEMP
-      console.log("Restarting in 2 seconds!")
+      setTimeout(() => {
+        display.updateMessage("Resetting the gameboard.")
+        changePlayerOrder();
+        gameboard.reset();
+        display.removeCellListener();
+      }, 2000);
+      
+      setTimeout(() => {
+        display.resetGameBoard();
+        display.updateMessage("'s turn.", true);
+        display.listenCellClicks();
+      }, 4000);
       return;
     }
     
@@ -77,11 +90,20 @@ const game = (function() {
   const reset = () => {
     players.length = 0;
   }
+
+  const changePlayerOrder = () => {
+    if (orderChanged) {
+      orderChanged = false;
+      round = 0;
+    } else {
+      orderChanged = true;
+      round = 1;
+    }
+  }
   
   const nextRound = () => {
     round++;
-    gameboard.draw();
-    console.log(`${turn().getName()}'s turn!`);
+    display.updateMessage("'s turn.", true);
   }
 
   const turn = () => players[round % 2];
@@ -91,24 +113,33 @@ const game = (function() {
   // Any win condition
   const checkWin = () => {
     return winningConditions.some(condition => 
-      condition.every(([row, column]) => gameboard.currentState()[row][column] === turn().getMarker()))
+      condition.every(([row, column]) => gameboard.currentState()[row][column] === turn().getMarker()));
   }
 
   const over = () => {
     if (checkWin()) {
-      console.log(`${turn().getName()} WINS!`);
+      display.updateMessage(" won!", true);
+      console.log(turn().getName());
+      console.log(turn().getScore());
+      turn().incrementScore();
+      console.log(turn().getScore());
+      display.updateScoreboard();
       return true;
     }
     
     if(!gameboard.currentState().flat().includes(null)) {
-      console.log("TIE!");
+      display.updateMessage("Tie!");
       return true;
     }
 
     return false;
   }
 
-  return { start, playRound, turn };
+  const getPlayers = () => {
+    return players;
+  }
+
+  return { start, playRound, turn, getPlayers, round };
 })();
 
 const display = (function() {
@@ -117,6 +148,8 @@ const display = (function() {
   const playerTwoForm = document.querySelector("#form-two");
   const scoreBoard = document.querySelector(".scoreboard");
   const instructions = document.querySelector(".instructions");
+  const playerOneScore = scoreBoard.querySelector("#player-score-one");
+  const playerTwoScore = scoreBoard.querySelector("#player-score-two");
   
   const initialize = () => {
     createGameBoard();
@@ -137,28 +170,27 @@ const display = (function() {
     }
   }
   
+  // Used { once:true } to automatically remove listeners after one invoke
   const listenCellClicks = () => {
-    gameboardElement.addEventListener("click", (event) => {
-      if (event.target.classList.contains("empty")) {
-        let svg;
-        
-        if (game.turn().getMarker() == "x") {
-          svg = drawX(game.turn().getColor());
-        } else {
-          svg = drawO(game.turn().getColor());
-        }
-        
-        event.target.appendChild(svg);
-        event.target.classList.add(game.turn().getMarker());
-        event.target.classList.remove("empty");
+    gameboardElement.addEventListener("click", cellClickHandler);
+  }
 
-        game.playRound(event.target.dataset.row, event.target.dataset.column);
-        
-        instructions.querySelector(".turn").textContent = game.turn().getName();
-        instructions.querySelector(".turn").style.color = `var(--marker-color-${game.turn().getColor()})`;
-        console.log(`Clicked cell ${event.target.dataset.row}-${event.target.dataset.column}`);
+  const cellClickHandler = (event) => {
+    if (event.target.classList.contains("empty")) {
+      let svg;
+      
+      if (game.turn().getMarker() == "x") {
+        svg = drawX(game.turn().getColor());
+      } else {
+        svg = drawO(game.turn().getColor());
       }
-    })
+      
+      event.target.appendChild(svg);
+      event.target.classList.add(game.turn().getMarker());
+      event.target.classList.remove("empty");
+
+      game.playRound(event.target.dataset.row, event.target.dataset.column);
+    }
   }
 
   const listenColorChange = () => {
@@ -179,7 +211,6 @@ const display = (function() {
           h2.style.borderColor = `var(--marker-color-${radioButton.value})`;
           h2.style.setProperty("--box-shadow", `0 0 16px 4px var(--marker-color-${radioButton.value})`);
 
-          
           readyButton.style.borderColor = `var(--marker-color-${radioButton.value})`; 
           readyButton.style.setProperty("box-shadow", `0 0 12px 3px var(--marker-color-${radioButton.value})`); 
         }
@@ -279,15 +310,13 @@ const display = (function() {
       const playerOneName = scoreBoard.querySelector("#scoreboard-name-one");
       const playerTwoName = scoreBoard.querySelector("#scoreboard-name-two");
       playerOneName.textContent = playerOneForm.elements["player-name"].value;
-      playerTwoName.textContent = playerTwoForm.elements["player-name"].value;
       playerOneName.style.color = `var(--marker-color-${playerOneForm.elements["marker-color"].value})`;
+      playerTwoName.textContent = playerTwoForm.elements["player-name"].value;
       playerTwoName.style.color = `var(--marker-color-${playerTwoForm.elements["marker-color"].value})`;
   
-      const playerOneScore = scoreBoard.querySelector("#player-score-one");
-      const playerTwoScore = scoreBoard.querySelector("#player-score-two");
       playerOneScore.textContent = "0";
-      playerTwoScore.textContent = "0";
       playerOneScore.style.color = `var(--marker-color-${playerOneForm.elements["marker-color"].value})`;
+      playerTwoScore.textContent = "0";
       playerTwoScore.style.color = `var(--marker-color-${playerTwoForm.elements["marker-color"].value})`;
   
       scoreBoard.querySelector(".versus").textContent = "VS";
@@ -296,16 +325,46 @@ const display = (function() {
 
   const createInstructions = () => {
     instructions.classList.add("visible");
-    const message = document.createTextNode("'s turn.");
 
     setTimeout(() => {
-      instructions.querySelector(".turn").textContent = game.turn().getName();
-      instructions.querySelector(".turn").style.color = `var(--marker-color-${game.turn().getColor()})`;
-      instructions.querySelector(".message").append(message);
+      updateMessage("'s turn", true);
     }, 500);
   }
 
-  return { initialize, drawX, drawO };
+  const updateScoreboard = () => {
+    playerOneScore.textContent = game.getPlayers()[0].getScore();
+    playerTwoScore.textContent = game.getPlayers()[1].getScore();
+  }
+
+  const resetGameBoard = () => {
+    deleteGameBoard();
+    createGameBoard();
+  }
+
+  const deleteGameBoard = () => {
+    while (gameboardElement.childNodes.length > 0) gameboardElement.removeChild(gameboardElement.firstChild);
+  }
+
+  const updateMessage = (text, showPlayer = false) => {
+    const player = instructions.querySelector(".turn");
+    const message = instructions.querySelector(".message");
+
+    if (showPlayer) {
+      player.textContent = game.turn().getName();
+      player.style.color = `var(--marker-color-${game.turn().getColor()})`;
+    } else {
+      player.textContent = "";
+    }
+    message.lastChild.textContent = text;
+  }
+
+  const removeCellListener = () => {
+    gameboardElement.removeEventListener("click", cellClickHandler);
+  }
+
+  return { initialize, drawX, drawO,
+    updateScoreboard, resetGameBoard, updateMessage,
+    listenCellClicks, removeCellListener };
 })();
 
 display.initialize();

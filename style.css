@@ -175,7 +175,7 @@ body {
 
 .player-form input[type="text"] {
   height: 32px;
-  padding: 4px 8px;
+  padding: 2px 4px;
   text-align: center;
   background-color: var(--light-gray);
   color: var(--dark);
@@ -184,7 +184,7 @@ body {
   box-shadow: inset 0 0 10px ;
   border-radius: 8px;
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 1em;
 }
 
 .player-form input[type="text"]:focus-visible {
@@ -443,8 +443,9 @@ body {
 
 .x > svg,
 .o > svg {
-  width: 70%;
-  height: 70%;
+  width: 60%;
+  height: 60%;
+  transition: all 0.4s ease-in-out;
 }
 
 .line {

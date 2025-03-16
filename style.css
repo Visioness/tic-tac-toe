@@ -116,7 +116,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  gap: 40px;
+  gap: 20px;
   backface-visibility: hidden;
 }
 
@@ -205,20 +205,21 @@ body {
   position: absolute;
   content: "";
   width: 200px;
-  bottom: -30px;
+  bottom: -20px;
   border-bottom: 1px solid var(--light-blue);
   border-top: 1px solid var(--light-blue);
   box-shadow: 0 0 10px 2px var(--light-blue);
 }
 
-.color-options {
+.marker-colors {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
   gap: 12px ;
 }
 
-.marker-color {
+.marker-color,
+.marker-type {
   appearance: none;
   position: relative;
   width: 24px;
@@ -296,16 +297,58 @@ body {
   transform: translate(-50%, -50%) scale(1);
 }
 
-.marker-options {
+.marker-types {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  justify-items: center;
   gap: 24px;
+}
+
+.marker-type {
+  transition: all 0.3s ease-in-out;
+}
+
+.option svg {
+  position: absolute;
+  content: "";
+  width: 16px;
+  height: 16px;
+  top: 4px;
+  left: 4px;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: all 0.3s ease-in-out;
+}
+
+.marker-type:checked ~ svg {
+  transform: scale(1);
+}
+
+.marker-types .line {
+  stroke-width: 32;
+  animation: draw 0.15s ease forwards;
+  transition: stroke 0.3s ease-in-out;
+}
+
+.marker-types .circle {
+  stroke-width: 32;
+  transition: stroke 0.3s ease-in-out;
+  animation: draw 0.3s ease forwards;
+}
+
+#player-one .marker-type {
+  border-color: var(--marker-color-red);
+}
+
+#player-two .marker-type {
+  border-color: var(--marker-color-blue);
 }
 
 .option {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  position: relative;
 }
 
 .ready-button {
@@ -398,7 +441,7 @@ body {
 
 .cell {
   position: relative;
-  background: var(--light-blue);
+  background: var(--dark);
   border: 2px solid var(--light);
   display: flex;
   align-items: center;
@@ -438,26 +481,24 @@ body {
   border-right-width: 4px;
 }
 
-.x > svg,
-.o > svg {
-  width: 60%;
-  height: 60%;
-  transition: all 0.4s ease-in-out;
+.cell > svg {
+  width: 70%;
+  height: 70%;
 }
 
 .line {
-  stroke-width: 9;
+  stroke-width: 12;
   stroke-dasharray: 140;
-  stroke-dashoffset: 140;
-  animation: draw 0.5s ease forwards;
+  stroke-dashoffset: 130;
+  animation: draw 0.3s ease forwards;
 }
 
 .circle {
-  stroke-width: 9;
+  stroke-width: 12;
   fill: none;
   stroke-dasharray: 314;
   stroke-dashoffset: 314;
-  animation: draw 1s ease forwards;
+  animation: draw 0.6s ease forwards;
 }
 
 @keyframes draw {

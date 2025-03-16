@@ -1,7 +1,6 @@
-/**
- * Tic Tac Toe Game
- * A modular implementation with clear separation of concerns
- */
+/*
+ - Tic Tac Toe Game
+*/
 
 // Player Factory - Creates player objects
 const Player = (name, marker, color) => {
@@ -188,6 +187,10 @@ const DisplayController = (() => {
   const playerOneScore = document.querySelector("#player-score-one");
   const playerTwoScore = document.querySelector("#player-score-two");
   
+  // Current color values for players
+  let playerOneColor = "red";
+  let playerTwoColor = "blue";
+  
   // Event handler for cell clicks
   const handleCellClick = (event) => {
     const cell = event.target.closest(".cell");
@@ -198,8 +201,8 @@ const DisplayController = (() => {
     const currentPlayer = GameController.getCurrentPlayer();
     
     const svg = currentPlayer.getMarker() === "x" 
-      ? drawX(currentPlayer.getColor()) 
-      : drawO(currentPlayer.getColor());
+      ? drawX(`var(--marker-color-${currentPlayer.getColor()})`) 
+      : drawO(`var(--marker-color-${currentPlayer.getColor()})`);
       
     cell.appendChild(svg);
     cell.classList.add(currentPlayer.getMarker());
@@ -212,6 +215,8 @@ const DisplayController = (() => {
   const initialize = () => {
     createGameBoard();
     setupFormListeners();
+    setupMarkerType();
+    setMarkerChangeListeners();
     setupColorChangeListeners();
   };
   
@@ -242,8 +247,8 @@ const DisplayController = (() => {
   const setupColorChangeListeners = () => {
     const h2One = document.querySelector("#player-one h2");
     const h2Two = document.querySelector("#player-two h2");
-    const colorOptionsOne = document.querySelector("#player-one .color-options");
-    const colorOptionsTwo = document.querySelector("#player-two .color-options");
+    const colorOptionsOne = document.querySelector("#player-one .marker-colors");
+    const colorOptionsTwo = document.querySelector("#player-two .marker-colors");
 
     [
       [colorOptionsOne, h2One, playerOneForm], 
@@ -255,17 +260,64 @@ const DisplayController = (() => {
         
         const radioButton = option.querySelector("input");
         const readyButton = form.querySelector(".ready-button");
-        const colorValue = radioButton.value;
+        if (form.id === "form-one") {
+          playerOneColor = radioButton.value;
+        } else {
+          playerTwoColor = radioButton.value;
+        }
+        const playerColor = form.id === "form-one" ? playerOneColor : playerTwoColor;
         
         // Update UI with selected color
-        h2.style.color = `var(--marker-color-${colorValue})`;
-        h2.style.borderColor = `var(--marker-color-${colorValue})`;
-        h2.style.setProperty("--box-shadow", `0 0 16px 4px var(--marker-color-${colorValue})`);
-        readyButton.style.borderColor = `var(--marker-color-${colorValue})`;
-        readyButton.style.boxShadow = `0 0 12px 3px var(--marker-color-${colorValue})`;
+        h2.style.color = `var(--marker-color-${playerColor})`;
+        h2.style.borderColor = `var(--marker-color-${playerColor})`;
+        h2.style.setProperty("--box-shadow", `0 0 16px 4px var(--marker-color-${playerColor})`);
+        readyButton.style.borderColor = `var(--marker-color-${playerColor})`;
+        readyButton.style.boxShadow = `0 0 12px 3px var(--marker-color-${playerColor})`;
+      
+        const markerTypes = form.querySelector(".marker-types");
+        markerTypes.querySelectorAll(".marker-type").forEach(input => {
+          input.style.borderColor = `var(--marker-color-${playerColor})`;
+          const svg = input.closest(".marker-types .option").querySelector("svg");
+          svg.childNodes.forEach(path => {
+            path.style.stroke = `var(--marker-color-${playerColor})`;
+          });
+        });
       });
     });
   };
+
+  // Setup marker type visuals
+  const setupMarkerType = () => {
+    const options = document.querySelectorAll(".marker-types .option");
+    options.forEach(option => {
+      const input = option.querySelector(".marker-type");
+      const form = option.closest(".player-form");
+      const color = form.id.includes("one") ? "red" : "blue"
+      const svg = input.classList.contains("x")
+        ? drawX(`var(--marker-color-${color})`, 150)
+        : drawO(`var(--marker-color-${color})`);
+  
+      option.append(svg);
+    });
+  }
+
+  // Handle marker type changes on player forms
+  const setMarkerChangeListeners = () => {
+    [playerOneForm, playerTwoForm].forEach((form) => {
+      const options = form.querySelectorAll(".marker-types .option");
+      options.forEach(option => {
+        const input = option.querySelector(".marker-type");
+        input.addEventListener("change", () => {
+          option.querySelector("svg").remove();
+          const color = option.closest("form").id === "form-one" ? playerOneColor : playerTwoColor;
+          const newSvg = input.classList.contains("x")
+            ? drawX(`var(--marker-color-${color})`, 150)
+            : drawO(`var(--marker-color-${color})`);
+          option.append(newSvg);
+        })
+      })
+    });
+  }
 
   // Handle form submissions
   const setupFormListeners = () => {
@@ -285,7 +337,6 @@ const DisplayController = (() => {
     );
     
     if (bothReady) {
-      // Animate player forms away
       [playerOneForm, playerTwoForm].forEach(form => {
         setTimeout(() => {
           form.parentElement.classList.add("removed");
@@ -293,7 +344,6 @@ const DisplayController = (() => {
         }, 1000);
       });
 
-      // Create players
       const playerOne = Player(
         playerOneForm.elements["player-name"].value,
         playerOneForm.elements["marker-type"].value,
@@ -306,7 +356,6 @@ const DisplayController = (() => {
         playerTwoForm.elements["marker-color"].value
       );
       
-      // Start game
       initializeGame(playerOne, playerTwo);
     }
   };
@@ -320,7 +369,7 @@ const DisplayController = (() => {
   };
 
   // Draw X marker
-  const drawX = (color) => {
+  const drawX = (color, timeInterval = 300) => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 120 120");
     svg.setAttribute("width", "120");
@@ -343,7 +392,7 @@ const DisplayController = (() => {
     line2.setAttribute("y2", "110");
 
     svg.appendChild(line1);
-    setTimeout(() => svg.appendChild(line2), 500);
+    setTimeout(() => svg.appendChild(line2), timeInterval);
 
     return svg;
   };
@@ -436,6 +485,7 @@ const DisplayController = (() => {
       messageElement.lastChild.textContent = message;
     }
   };
+
 
   return { 
     initialize,

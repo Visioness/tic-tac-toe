@@ -66,6 +66,8 @@ const GameController = (() => {
   ];
 
   const players = [];
+  const gamesRequired = 2;
+  const gameOverThreshold = 3;
   let currentRound;
   let orderReversed = false;
   let gameActive = false;
@@ -107,7 +109,7 @@ const GameController = (() => {
   const checkGameOver = () => {
     if (checkForWin()) {
       getCurrentPlayer().incrementScore();
-      DisplayController.updateMessage(`${getCurrentPlayer().getName()} won!`);
+      DisplayController.updateMessage(" won!", true);
       DisplayController.updateScoreboard();
       return "win";
     }
@@ -120,32 +122,50 @@ const GameController = (() => {
     return false;
   };
 
+  const checkSeriesOver = () => {
+    return players.some(player => player.getScore() === gamesRequired)
+  }
+
   const nextRound = () => {
     currentRound++;
-    DisplayController.updateMessage(`${getCurrentPlayer().getName()}'s turn`);
+    DisplayController.updateMessage("'s turn", true);
   };
 
   const playRound = (row, column) => {
     if (!makeMove(row, column)) return;
     
-    const gameResult = checkGameOver();
-    
-    if (gameResult) {
-      gameActive = false;
-      DisplayController.removeCellListeners();
+    if (currentRound > gameOverThreshold) {
+      const gameResult = checkGameOver();
+
+      if (gameResult) {
+        gameActive = false;
+        DisplayController.removeCellListeners();
+        
+        if (checkSeriesOver()) {
+          console.log("finished");
+          setTimeout(() => {
+            DisplayController.updateMessage(" won the series.", true);
+            
+            setTimeout(() => {location.reload()}, 2000);
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            DisplayController.updateMessage("Resetting the gameboard...");
+            togglePlayerOrder();
+            GameBoard.reset();
+            setTimeout(() => {
+              DisplayController.resetGameBoard();
+              DisplayController.updateMessage("'s turn", true);
+              DisplayController.addCellListeners();
+              gameActive = true;
+            }, 2000);
+          }, 2000);
+        }
+
+      } else {
+        nextRound();
+      }
       
-      setTimeout(() => {
-        DisplayController.updateMessage("Resetting the gameboard...");
-        togglePlayerOrder();
-        GameBoard.reset();
-      }, 2000);
-      
-      setTimeout(() => {
-        DisplayController.resetGameBoard();
-        DisplayController.updateMessage(`${getCurrentPlayer().getName()}'s turn`);
-        DisplayController.addCellListeners();
-        gameActive = true;
-      }, 4000);
     } else {
       nextRound();
     }
@@ -161,10 +181,9 @@ const GameController = (() => {
     }
   };
 
+  // Simple page reload when the game is finished
   const resetGame = () => {
-    players.length = 0;
-    gameActive = false;
-    currentRound = 0;
+    location.reload();
   };
 
   return { 
@@ -446,7 +465,7 @@ const DisplayController = (() => {
     instructions.classList.add("visible");
     
     setTimeout(() => {
-      updateMessage(`${GameController.getCurrentPlayer().getName()}'s turn`);
+      updateMessage("'s turn", true);
     }, 500);
   };
 
@@ -466,24 +485,38 @@ const DisplayController = (() => {
   };
 
   // Update the message shown in instructions
-  const updateMessage = (message) => {
+  const updateMessage = (message, showPlayer = false) => {
     const player = instructions.querySelector(".turn");
     const messageElement = instructions.querySelector(".message");
     
-    if (message.includes("'s turn") || message.includes("won!")) {
-      const currentPlayer = GameController.getCurrentPlayer();
+    if (showPlayer) {
+      const currentPlayer = GameController.getCurrentPlayer(); 
       player.textContent = currentPlayer.getName();
       player.style.color = `var(--marker-color-${currentPlayer.getColor()})`;
-      
-      if (message.includes("won!")) {
-        messageElement.lastChild.textContent = " won!";
-      } else {
-        messageElement.lastChild.textContent = "'s turn";
-      }
     } else {
       player.textContent = "";
-      messageElement.lastChild.textContent = message;
     }
+
+    messageElement.lastChild.textContent = message;
+
+    // if (message.includes("'s turn") || message.includes("won")) {
+    //   const currentPlayer = GameController.getCurrentPlayer();
+    //   player.textContent = currentPlayer.getName();
+    //   player.style.color = `var(--marker-color-${currentPlayer.getColor()})`;
+      
+    //   if (message.includes("won!")) {
+    //     messageElement.lastChild.textContent = " won!";
+    //   } else if (message.includes("series")) {
+    //     messageElement.lastChild.textContent = ""
+    //   } 
+      
+    //   else {
+    //     messageElement.lastChild.textContent = "'s turn";
+    //   }
+    // } else {
+    //   player.textContent = "";
+    //   messageElement.lastChild.textContent = message;
+    // }
   };
 
 

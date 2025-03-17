@@ -286,6 +286,7 @@ const DisplayController = (() => {
         const playerColor = form.id === "form-one" ? playerOneColor : playerTwoColor;
         
         // Update UI with selected color
+        h2.style.fontPalette = `--font-${playerColor}`;
         h2.style.color = `var(--marker-color-${playerColor})`;
         h2.style.borderColor = `var(--marker-color-${playerColor})`;
         h2.style.setProperty("--box-shadow", `0 0 16px 4px var(--marker-color-${playerColor})`);
@@ -442,20 +443,22 @@ const DisplayController = (() => {
       const players = GameController.getPlayers();
       const playerOneName = document.querySelector("#scoreboard-name-one");
       const playerTwoName = document.querySelector("#scoreboard-name-two");
+      const versus = scoreboard.querySelector(".versus");
       
       playerOneName.textContent = players[0].getName();
-      playerOneName.style.color = `var(--marker-color-${players[0].getColor()})`;
+      playerOneName.style.fontPalette = `--font-${players[0].getColor()}`;
       
       playerTwoName.textContent = players[1].getName();
-      playerTwoName.style.color = `var(--marker-color-${players[1].getColor()})`;
+      playerTwoName.style.fontPalette = `--font-${players[1].getColor()}`;
   
       playerOneScore.textContent = "0";
-      playerOneScore.style.color = `var(--marker-color-${players[0].getColor()})`;
+      playerOneScore.style.fontPalette = `--font-${players[0].getColor()}`;
       
       playerTwoScore.textContent = "0";
-      playerTwoScore.style.color = `var(--marker-color-${players[1].getColor()})`;
+      playerTwoScore.style.fontPalette = `--font-${players[1].getColor()}`;
   
-      scoreboard.querySelector(".versus").textContent = "VS";
+      versus.textContent = "VS";
+      versus.style.fontPalette = `--font-light`;
     }, 500);
   };
 
@@ -491,31 +494,12 @@ const DisplayController = (() => {
     if (showPlayer) {
       const currentPlayer = GameController.getCurrentPlayer(); 
       player.textContent = currentPlayer.getName();
-      player.style.color = `var(--marker-color-${currentPlayer.getColor()})`;
+      player.style.fontPalette = `--font-${currentPlayer.getColor()}`;
     } else {
       player.textContent = "";
     }
 
     messageElement.lastChild.textContent = message;
-
-    // if (message.includes("'s turn") || message.includes("won")) {
-    //   const currentPlayer = GameController.getCurrentPlayer();
-    //   player.textContent = currentPlayer.getName();
-    //   player.style.color = `var(--marker-color-${currentPlayer.getColor()})`;
-      
-    //   if (message.includes("won!")) {
-    //     messageElement.lastChild.textContent = " won!";
-    //   } else if (message.includes("series")) {
-    //     messageElement.lastChild.textContent = ""
-    //   } 
-      
-    //   else {
-    //     messageElement.lastChild.textContent = "'s turn";
-    //   }
-    // } else {
-    //   player.textContent = "";
-    //   messageElement.lastChild.textContent = message;
-    // }
   };
 
 

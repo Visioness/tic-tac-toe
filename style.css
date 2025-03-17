@@ -1,13 +1,19 @@
+/* ==========================================================================
+    Variables & Base Styles
+    ========================================================================== */
+
 :root {
+  /* Core colors */
   --black: black;
   --dark: rgb(10, 10, 32);
   --dark-green: darkgreen;
-  --gray: #444;
+  --gray: #555;
   --light: rgb(220, 220, 220);
   --light-gray: rgb(175, 175, 175);
   --light-blue: rgb(150, 179, 218);
   --light-green: rgb(125, 228, 125);
-
+  
+  /* Marker colors */
   --marker-color-red: rgb(223, 24, 64);
   --marker-color-orange: rgb(202, 123, 19);
   --marker-color-yellow: rgb(207, 204, 22);
@@ -15,6 +21,7 @@
   --marker-color-blue: rgb(27, 119, 211);
   --marker-color-purple: rgb(136, 26, 209);
 
+  /* Background colors with transparency */
   --background-red: rgba(223, 24, 64, 0.3);
   --background-orange: rgba(202, 123, 19, 0.3);
   --background-yellow: rgba(207, 204, 22, 0.3);
@@ -22,10 +29,29 @@
   --background-blue: rgba(27, 119, 211, 0.3);
   --background-purple: rgba(136, 26, 209, 0.3);
 
-
+  /* UI colors */
   --player-card-primary: rgb(34, 48, 65);
   --gradient-red: rgb(107, 33, 49);
   --gradient-dark: var(--dark);
+  
+  /* Layout variables */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 20px;
+  --spacing-xl: 40px;
+  
+  --border-thin: 2px;
+  --border-medium: 3px;
+  --border-thick: 4px;
+  
+  --radius-small: 8px;
+  --radius-medium: 20px;
+  --radius-large: 40px;
+  
+  --shadow-inset-small: inset 0 0 10px;
+  --shadow-inset-medium: inset 0 0 20px 0;
+  --shadow-inset-large: inset 0 0 20px 4px;
 }
 
 *, *::before, *::after {
@@ -53,6 +79,10 @@ body {
   font-family: "Ubuntu";
 }
 
+/* ==========================================================================
+    Header & Footer
+    ========================================================================== */
+
 .header,
 .footer {
   background-color: var(--dark);
@@ -63,34 +93,40 @@ body {
   font-size: 1.2em;
 }
 
+/* ==========================================================================
+    Main Content Grid
+    ========================================================================== */
+
 .content {
-  padding: 20px;
+  padding: var(--spacing-lg);
   display: grid;
   grid-template-columns: 1fr minmax(250px, 300px) minmax(250px, 300px) 1fr;
   grid-template-rows: minmax(61px, 1fr) minmax(500px, auto) minmax(61px, 1fr);
   align-content: space-between;
   row-gap: 10px;
   perspective: 1000px;
-  background: var(--gradient-red);
   background: radial-gradient(circle, var(--gradient-dark) 0%, var(--gradient-red) 20%, var(--gradient-dark) 90%);
 }
+
+/* ==========================================================================
+    Player Info Cards
+    ========================================================================== */
 
 .player-info {
   position: relative;
   z-index: 1;
   aspect-ratio: 1 / 2;
   text-align: center;
-  padding: 20px;
-  border: 4px solid var(--light-blue);
+  padding: var(--spacing-lg);
+  border: var(--border-thick) solid var(--light-blue);
   color: var(--light);
   background: var(--player-card-primary);
-  box-shadow: inset 0 0 20px 4px var(--dark);
-  transition: all 2s;
+  box-shadow: var(--shadow-inset-large) var(--dark);
   
   align-self: center;
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 40px;
+  gap: var(--spacing-xl);
   transform-style: preserve-3d;
 }
 
@@ -98,16 +134,16 @@ body {
   grid-column: 2;
   grid-row: 2;
   transform-origin: left;
-  border-right-width: 2px;
-  border-radius: 40px 0 0 40px;
+  border-right-width: var(--border-thin);
+  border-radius: var(--radius-large) 0 0 var(--radius-large);
 }
 
 #player-two {
   grid-column: 3;
   grid-row: 2;
   transform-origin: right;
-  border-left-width: 2px;
-  border-radius: 0 40px 40px 0;
+  border-left-width: var(--border-thin);
+  border-radius: 0 var(--radius-large) var(--radius-large) 0;
 }
 
 #player-one.removed {
@@ -118,11 +154,15 @@ body {
   animation: close-right 1s linear forwards;
 }
 
+/* ==========================================================================
+    Player Form Elements
+    ========================================================================== */
+
 .player-form {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  gap: 20px;
+  gap: var(--spacing-lg);
   backface-visibility: hidden;
 }
 
@@ -137,7 +177,7 @@ body {
   --box-shadow: 0 0 16px 4px var(--marker-color-red);
 }
 
-#player-two h2{
+#player-two h2 {
   color: var(--marker-color-blue);
   --box-shadow: 0 0 16px 4px var(--marker-color-blue);
 }
@@ -149,28 +189,28 @@ body {
   bottom: -20px;
   left: 50%;
   transform: translateX(-50%);
-  border-bottom-width: 4px;
+  border-bottom-width: var(--border-thick);
   border-bottom-style: solid;
   border-color: inherit;
   box-shadow: var(--box-shadow, none);
-  transition: all 0.3s ease-in-out;
+  transition: 
+    width 0.3s ease-in-out,
+    border-color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
 }
 
 .player-info.ready h2::after {
   width: calc(100% + 40px);
 }
 
-.player-info.ready {
-  transition: all 2s;
-  position: relative;
-}
-
+/* Form container and inputs */
 .input-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: var(--spacing-sm);
+  position: relative;
 }
 
 .input-container > input[type="text"],
@@ -185,26 +225,26 @@ body {
   text-align: center;
   background-color: var(--light-gray);
   color: var(--dark);
-  border: none;
-  border: 2px solid var(--light);
-  box-shadow: inset 0 0 10px ;
-  border-radius: 8px;
+  border: var(--border-thin) solid var(--light);
+  box-shadow: var(--shadow-inset-small);
+  border-radius: var(--radius-small);
   font-weight: bold;
   font-size: 1em;
 }
 
+.player-form input[type="text"]::placeholder {
+  color: var(--gray);
+}
+
 .player-form input[type="text"]:focus-visible {
-  outline: none;
+  outline: 2px solid var(--light-blue);
+  outline-offset: 2px;
 }
 
 .input-container > label,
 .input-container > span {
   font-size: 1.1em;
   font-weight: bold;
-}
-
-.input-container {
-  position: relative;
 }
 
 .input-container:not(:last-of-type)::after {
@@ -217,13 +257,18 @@ body {
   box-shadow: 0 0 10px 2px var(--light-blue);
 }
 
+/* ==========================================================================
+    Marker Colors & Types
+    ========================================================================== */
+
 .marker-colors {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
-  gap: 12px ;
+  gap: var(--spacing-md);
 }
 
+/* Common styles for marker inputs */
 .marker-color,
 .marker-type {
   appearance: none;
@@ -232,9 +277,17 @@ body {
   height: 24px;
   align-self: center;
   border-style: solid;
-  border-width: 2px;
+  border-width: var(--border-thin);
   border-radius: 50%;
   background-color: var(--dark);
+  cursor: pointer;
+}
+
+/* Focus state for accessibility */
+.marker-color:focus-visible,
+.marker-type:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
 }
 
 .marker-color::after {
@@ -246,63 +299,67 @@ body {
   left: 50%;
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
 
-.marker-red {
+.marker-color:checked::after { 
+  transform: translate(-50%, -50%) scale(1); 
+}
+
+/* Marker color styles - consolidated with attribute selectors */
+.marker-color {
+  border-color: var(--marker-color-red);
+}
+
+[class*="marker-red"] {
   border-color: var(--marker-color-red);
 }
 
 .marker-red:checked::after {
   background-color: var(--marker-color-red);
-  transform: translate(-50%, -50%) scale(1);
 }
 
-.marker-orange {
+[class*="marker-orange"] {
   border-color: var(--marker-color-orange);
 }
 
 .marker-orange:checked::after {
   background-color: var(--marker-color-orange);
-  transform: translate(-50%, -50%) scale(1);
 }
 
-.marker-yellow {
+[class*="marker-yellow"] {
   border-color: var(--marker-color-yellow);
 }
 
 .marker-yellow:checked::after {
   background-color: var(--marker-color-yellow);
-  transform: translate(-50%, -50%) scale(1);
 }
 
-.marker-green {
+[class*="marker-green"] {
   border-color: var(--marker-color-green);
 }
 
 .marker-green:checked::after {
   background-color: var(--marker-color-green);
-  transform: translate(-50%, -50%) scale(1);
 }
 
-.marker-blue {
+[class*="marker-blue"] {
   border-color: var(--marker-color-blue);
 }
 
 .marker-blue:checked::after {
   background-color: var(--marker-color-blue);
-  transform: translate(-50%, -50%) scale(1);
 }
 
-.marker-purple {
+[class*="marker-purple"] {
   border-color: var(--marker-color-purple);
 }
 
 .marker-purple:checked::after {
   background-color: var(--marker-color-purple);
-  transform: translate(-50%, -50%) scale(1);
 }
 
+/* Marker types grid */
 .marker-types {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -311,7 +368,14 @@ body {
 }
 
 .marker-type {
-  transition: all 0.3s ease-in-out;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  position: relative;
 }
 
 .option svg {
@@ -323,7 +387,7 @@ body {
   left: 4px;
   border-radius: 50%;
   transform: scale(0);
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
 
 .marker-type:checked ~ svg {
@@ -350,26 +414,30 @@ body {
   border-color: var(--marker-color-blue);
 }
 
-.option {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: relative;
-}
-
+/* Ready button */
 .ready-button {
   height: 32px;
-  border-radius: 12px;
-  border: 3px solid var(--marker-color-blue);
+  border-radius: var(--radius-small);
+  border: var(--border-medium) solid var(--marker-color-blue);
   background-color: var(--black);
   color: var(--light);
   font-weight: bold;
-  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  transition: 
+    background-color 0.3s ease-in-out, 
+    color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out,
+    border-color 0.3s ease-in-out;
 }
 
 .ready-button:hover {
   background-color: var(--light);
   color: var(--black);
+}
+
+.ready-button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
 }
 
 #player-one .ready-button {
@@ -381,6 +449,10 @@ body {
   border-color: var(--marker-color-blue);
   box-shadow: 0 0 12px 3px var(--marker-color-blue);
 }
+
+/* ==========================================================================
+    Scoreboard & Instructions
+    ========================================================================== */
 
 .scoreboard {
   grid-column: 2 / 4;
@@ -400,26 +472,26 @@ body {
   align-self: center;
   align-items: center;
   max-height: 90px;
+  height: 70%;
   text-align: center;
   font-size: 1.8em;
   font-weight: bold;
   color: var(--light);
-  box-shadow: inset 0 0 20px 0 var(--dark);
-  border: 4px solid var(--light-blue);
+  box-shadow: var(--shadow-inset-medium) var(--dark);
+  border: var(--border-thick) solid var(--light-blue);
   background-color: var(--player-card-primary);
-  border-radius: 20px;
-  
-  transition: all 2s ease-in-out;
-  height: 100%;
+  border-radius: var(--radius-medium);
   padding: 10px;
   transform: scaleY(0);
   transform-origin: center;
   opacity: 0;
+  transition: 
+    transform 1s ease-in-out,
+    opacity 1s ease-in-out;
 }
 
 .scoreboard.visible,
 .instructions.visible {
-  transition: all 1s ease-in-out;
   transform: scaleY(1);
   opacity: 1;
 }
@@ -429,10 +501,14 @@ body {
   height: max-content;
 }
 
+/* ==========================================================================
+    Game Board
+    ========================================================================== */
+
 .gameboard {
   grid-column: 2 / 4;
   grid-row: 2;
-  padding: 20px;
+  padding: var(--spacing-lg);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -441,51 +517,53 @@ body {
   align-self: center;
   aspect-ratio: 1 / 1;
   background-color: var(--player-card-primary);
-  border: 4px solid var(--light-blue);
-  border-radius: 40px;
-  box-shadow: inset 0 0 20px 0 var(--dark);
+  border: var(--border-thick) solid var(--light-blue);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-inset-medium) var(--dark);
 }
 
 .cell {
   position: relative;
   background: var(--light-gray);
-  border: 2px solid var(--dark);
+  border: var(--border-thin) solid var(--dark);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 0 20px 0 var(--dark);
+  box-shadow: var(--shadow-inset-medium) var(--dark);
 }
 
+/* Cell border radius for corners */
 .cell[data-row="0"][data-column="0"] {
-  border-radius: 20px 0 0 0;
+  border-radius: var(--radius-medium) 0 0 0;
 }
 
 .cell[data-row="0"][data-column="2"] {
-  border-radius: 0 20px 0 0;
+  border-radius: 0 var(--radius-medium) 0 0;
 }
 
 .cell[data-row="2"][data-column="0"] {
-  border-radius: 0 0 0 20px;
+  border-radius: 0 0 0 var(--radius-medium);
 }
 
 .cell[data-row="2"][data-column="2"] {
-  border-radius: 0 0 20px 0;
+  border-radius: 0 0 var(--radius-medium) 0;
 }
 
+/* Cell border thickness for outer edges */
 .cell[data-row="0"] {
-  border-top-width: 4px;
+  border-top-width: var(--border-thick);
 }
 
 .cell[data-row="2"] {
-  border-bottom-width: 4px;
+  border-bottom-width: var(--border-thick);
 }
 
 .cell[data-column="0"] {
-  border-left-width: 4px;
+  border-left-width: var(--border-thick);
 }
 
 .cell[data-column="2"] {
-  border-right-width: 4px;
+  border-right-width: var(--border-thick);
 }
 
 .cell > svg {
@@ -493,6 +571,7 @@ body {
   height: 70%;
 }
 
+/* SVG animations */
 .line {
   stroke-width: 12;
   stroke-dasharray: 140;
@@ -508,23 +587,13 @@ body {
   animation: draw 0.6s ease forwards;
 }
 
+/* ==========================================================================
+    Animations
+    ========================================================================== */
+
 @keyframes draw {
   to {
     stroke-dashoffset: 0;
-  }
-}
-
-@keyframes ready-left {
-  0% {
-    background: linear-gradient(90deg, var(--light-gray) 0%, var(--light-gray) 100%);
-  }
-  
-  50% {
-    background: linear-gradient(90deg, var(--light-gray) 0%, var(--light-green) 60%);
-  }
-  
-  100% {
-    background: linear-gradient(90deg, var(--light-gray) 0%, var(--light-green) 0%);
   }
 }
 

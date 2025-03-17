@@ -142,7 +142,6 @@ const GameController = (() => {
         DisplayController.removeCellListeners();
         
         if (checkSeriesOver()) {
-          console.log("finished");
           setTimeout(() => {
             DisplayController.updateMessage(" won the series.", true);
             
@@ -343,7 +342,7 @@ const DisplayController = (() => {
     [playerOneForm, playerTwoForm].forEach(form => {
       form.addEventListener("submit", (event) => {
         event.preventDefault();
-        form.parentElement.classList.add("ready");
+        form.parentElement.classList.toggle("ready");
         checkBothPlayersReady();
       });
     });
